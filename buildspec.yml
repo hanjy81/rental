@@ -82,7 +82,7 @@ phases:
                #       - /bin/sh     #liveness
                #       - -c          #liveness
                #       - touch /tmp/test; sleep 30; rm -rf /tmp/test; sleep 600  #liveness   
-               #     resources:
+                    resources:
                #       limits:       #HPA
                #         cpu: 500m   #HPA
                #       requests:     #HPA
