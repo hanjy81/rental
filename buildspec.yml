@@ -1,9 +1,9 @@
 version: 0.2
-
+    
 env:
   variables:
     _PROJECT_NAME: "user5-rental"
- 
+
 phases:
   install:
     runtime-versions:
@@ -47,8 +47,9 @@ phases:
             labels:
               app: $_PROJECT_NAME
           spec:
+            type: LoadBalancer
             ports:
-              - port: 8080
+              - port: 80
                 targetPort: 8080
             selector:
               app: $_PROJECT_NAME
@@ -59,6 +60,7 @@ phases:
           kind: Deployment
           metadata:
             name: $_PROJECT_NAME
+            namespace:: gr5
             labels:
               app: $_PROJECT_NAME
           spec:
@@ -76,22 +78,37 @@ phases:
                     image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
                     ports:
                       - containerPort: 8080
-                    readinessProbe:
-                      httpGet:
-                        path: /actuator/health
-                        port: 8080
-                      initialDelaySeconds: 10
-                      timeoutSeconds: 2
-                      periodSeconds: 5
-                      failureThreshold: 10
-                    livenessProbe:
-                      httpGet:
-                        path: /actuator/health
-                        port: 8080
-                      initialDelaySeconds: 120
-                      timeoutSeconds: 2
-                      periodSeconds: 5
-                      failureThreshold: 5
+               #     args:           #liveness
+               #       - /bin/sh     #liveness
+               #       - -c          #liveness
+               #       - touch /tmp/test; sleep 30; rm -rf /tmp/test; sleep 600  #liveness   
+               #     resources:
+               #       limits:       #HPA
+               #         cpu: 500m   #HPA
+               #       requests:     #HPA
+               #         cpu: 200m   #HPA
+               #     readinessProbe:
+               #       httpGet:
+               #         path: /actuator/health
+               #         port: 8080
+               #       initialDelaySeconds: 10
+               #       timeoutSeconds: 2
+               #       periodSeconds: 5
+               #       failureThreshold: 10
+               #     livenessProbe:
+               #       httpGet:                         # 아래 liness 테스트시 이부분 삭제
+               #         path: /actuator/health         # 아래 liness 테스트시 이부분 삭제
+               #         port: 8080                     # 아래 liness 테스트시 이부분 삭제
+               #       initialDelaySeconds: 120         # 아래 liness 테스트시 이부분 삭제
+               #       timeoutSeconds: 2                # 아래 liness 테스트시 이부분 삭제
+               #       periodSeconds: 5                 # 아래 liness 테스트시 이부분 삭제
+               #       failureThreshold: 5              # 아래 liness 테스트시 이부분 삭제     
+                #      exec: #liveness
+                #        command: #liveness
+                #        - cat    #liveness
+                #        - /tmp/test  #liveness
+                #      initialDelaySeconds: 5  #liveness
+                #      periodSeconds: 5  #liveness
           EOF
 #cache:
   #paths:
