@@ -77,11 +77,15 @@ phases:
                     image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
                     ports:
                       - containerPort: 8080
+                    args:           #liveness
+                      - /bin/sh     #liveness
+                      - -c          #liveness
+                      - touch /tmp/test; sleep 30; rm -rf /tmp/test; sleep 600  #liveness   
                     resources:
-                      limits:
-                        cpu: 500m
-                      requests:
-                        cpu: 200m
+                      limits:       #HPA
+                        cpu: 500m   #HPA
+                      requests:     #HPA
+                        cpu: 200m   #HPA
                     readinessProbe:
                       httpGet:
                         path: /actuator/health
@@ -90,14 +94,13 @@ phases:
                       timeoutSeconds: 2
                       periodSeconds: 5
                       failureThreshold: 10
-                    livenessProbe:
-                      httpGet:
-                        path: /actuator/health
-                        port: 8080
-                      initialDelaySeconds: 120
-                      timeoutSeconds: 2
-                      periodSeconds: 5
-                      failureThreshold: 5
+                    livenessProbe: 
+                      exec: #liveness
+                        command: #liveness
+                        - cat    #liveness
+                        - /tmp/test  #liveness
+                      initialDelaySeconds: 5  #liveness
+                      periodSeconds: 5  #liveness
           EOF
 #cache:
   #paths:
