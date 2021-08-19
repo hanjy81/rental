@@ -77,15 +77,15 @@ phases:
                     image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
                     ports:
                       - containerPort: 8080
-                    args:           #liveness
-                      - /bin/sh     #liveness
-                      - -c          #liveness
-                      - touch /tmp/test; sleep 30; rm -rf /tmp/test; sleep 600  #liveness   
+               #     args:           #liveness
+               #       - /bin/sh     #liveness
+               #       - -c          #liveness
+               #       - touch /tmp/test; sleep 30; rm -rf /tmp/test; sleep 600  #liveness   
                     resources:
-                      limits:       #HPA
-                        cpu: 500m   #HPA
-                      requests:     #HPA
-                        cpu: 200m   #HPA
+               #       limits:       #HPA
+               #         cpu: 500m   #HPA
+               #       requests:     #HPA
+               #         cpu: 200m   #HPA
                     readinessProbe:
                       httpGet:
                         path: /actuator/health
@@ -94,13 +94,20 @@ phases:
                       timeoutSeconds: 2
                       periodSeconds: 5
                       failureThreshold: 10
-                    livenessProbe: 
-                      exec: #liveness
-                        command: #liveness
-                        - cat    #liveness
-                        - /tmp/test  #liveness
-                      initialDelaySeconds: 5  #liveness
-                      periodSeconds: 5  #liveness
+                    livenessProbe:
+                      httpGet:                         # 아래 liness 테스트시 이부분 삭제
+                        path: /actuator/health         # 아래 liness 테스트시 이부분 삭제
+                        port: 8080                     # 아래 liness 테스트시 이부분 삭제
+                      initialDelaySeconds: 120         # 아래 liness 테스트시 이부분 삭제
+                      timeoutSeconds: 2                # 아래 liness 테스트시 이부분 삭제
+                      periodSeconds: 5                 # 아래 liness 테스트시 이부분 삭제
+                      failureThreshold: 5              # 아래 liness 테스트시 이부분 삭제     
+                #      exec: #liveness
+                #        command: #liveness
+                #        - cat    #liveness
+                #        - /tmp/test  #liveness
+                #      initialDelaySeconds: 5  #liveness
+                #      periodSeconds: 5  #liveness
           EOF
 #cache:
   #paths:
