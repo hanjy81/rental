@@ -1,5 +1,5 @@
 version: 0.2
-  
+
 env:
   variables:
     _PROJECT_NAME: "user5-rental"
@@ -95,5 +95,5 @@ phases:
                       failureThreshold: 5
           EOF
 #cache:
- # paths:
-  #  - '/root/.m2/**/*'
+  #paths:
+    #- '/root/.m2/**/*'
