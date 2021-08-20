@@ -74,16 +74,16 @@ phases:
                   app: $_PROJECT_NAME
               spec:
                 containers:
-                  env:
-                    - name: port-list     #configmap
-                      valueFrom:          #configmap
-                        configMapKeyRef:  #configmap
-                          name: port-list #configmap
-                          key: port2      #configmap
                   - name: $_PROJECT_NAME
                     image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
                     ports:
-                      - containerPort: 8080                  
+                      - containerPort: 8080
+                    env:
+                      - name: port-list     #configmap
+                        valueFrom:          #configmap
+                          configMapKeyRef:  #configmap
+                            name: port-list #configmap
+                            key: port2      #configmap
                #     args:           #liveness
                #       - /bin/sh     #liveness
                #       - -c          #liveness
